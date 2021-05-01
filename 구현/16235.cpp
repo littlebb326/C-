@@ -17,7 +17,8 @@ void spring()
     for (int j = 1; j <= n; j++)
     {
       vector<int> temp;
-      sort(tree[i][j].begin(), tree[i][j].end());
+      if (tree[i][j].size() > 0)
+        sort(tree[i][j].begin(), tree[i][j].end());
       for (int k = 0; k < tree[i][j].size(); k++)
       {
         //cout << "tree " << k << " : " << tree[i][j][k] << " / nut : " << nut[i][j] << endl;
@@ -107,7 +108,7 @@ int main()
   {
     int x, y, z;
     cin >> x >> y >> z;
-    tree[y][x].push_back(z);
+    tree[x][y].push_back(z);
   }
 
   for (int i = 0; i < k; i++)
