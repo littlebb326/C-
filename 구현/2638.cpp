@@ -1,17 +1,10 @@
 #include <iostream>
 #include <queue>
 using namespace std;
-// struct cheese
-// {
-//     int r, c;
-//     int adj_cnt;
-//     cheese(int _r, int _c, int _adj_cnt)
-//     {
-//         r = _r;
-//         c = _c;
-//         adj_cnt = _adj_cnt;
-//     }
-// };
+#define SPACE 0
+#define CHEESE 1
+#define AIR 2
+
 int n, m;
 int time = 0;
 int cheese_cnt = 0;
@@ -31,7 +24,7 @@ void init()
         }
     }
 }
-void bfs(int r, int c)
+void bfs_adj(int r, int c)
 {
     queue<pair<int, int>> q;
     q.push(make_pair(r, c));
@@ -46,10 +39,9 @@ void bfs(int r, int c)
             int next_c = temp.second + dir[i][1];
             if (next_r > 0 && next_c > 0 && next_c <= m && next_r <= n)
             {
-
-                if (map[next_r][next_c] == 0)
+                if (map[next_r][next_c] == AIR)
                     adj[temp.first][temp.second]++;
-                if (!visit[next_r][next_c] && map[next_r][next_c] != 0)
+                else if (!visit[next_r][next_c] && map[next_r][next_c] == CHEESE)
                 {
                     visit[next_r][next_c] = true;
                     q.push(make_pair(next_r, next_c));
@@ -65,9 +57,49 @@ void find_adj()
     {
         for (int j = 1; j <= m; j++)
         {
-            if (!visit[i][j] && map[i][j] != 0)
+            if (!visit[i][j] && map[i][j] == 1)
             {
-                bfs(i, j);
+                bfs_adj(i, j);
+            }
+        }
+    }
+}
+void bfs_air(int r, int c)
+{
+    queue<pair<int, int>> q;
+    q.push(make_pair(r, c));
+    visit[r][c] = true;
+    while (!q.empty())
+    {
+        pair<int, int> temp = q.front();
+        map[temp.first][temp.second] = AIR;
+        q.pop();
+        for (int i = 0; i < 4; i++)
+        {
+            int next_r = temp.first + dir[i][0];
+            int next_c = temp.second + dir[i][1];
+            if (next_r > 0 && next_c > 0 && next_c <= m && next_r <= n)
+            {
+                if (!visit[next_r][next_c] && map[next_r][next_c] != CHEESE)
+                {
+                    visit[next_r][next_c] = true;
+                    q.push(make_pair(next_r, next_c));
+                }
+            }
+        }
+    }
+}
+void find_air()
+{
+    init();
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            if (i == 1 || j == 1 || i == n || i == m)
+            {
+                if (map[i][j] != CHEESE)
+                    bfs_air(i, j);
             }
         }
     }
@@ -80,7 +112,7 @@ void melt_cheese()
         {
             if (adj[i][j] >= 2)
             {
-                map[i][j] = 0;
+                map[i][j] = 2;
                 cheese_cnt--;
             }
         }
@@ -89,6 +121,7 @@ void melt_cheese()
 void solve()
 {
     time++;
+    find_air();
     find_adj();
     melt_cheese();
 }
