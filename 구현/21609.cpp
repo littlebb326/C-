@@ -47,11 +47,11 @@ void bfs(int r, int c, int target)
     queue<pair<int, int>> q;
     visit[r][c] = true;
     q.push(make_pair(r, c));
+    bg.standard = make_pair(r, c);
 
     while (!q.empty())
     {
         pair<int, int> p = q.front();
-        bg.standard = p;
         bg.block_v.push_back(p);
         q.pop();
         size++;
