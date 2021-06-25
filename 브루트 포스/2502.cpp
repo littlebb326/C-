@@ -14,7 +14,6 @@ void dfs(int d, int k1, int k2)
             b = k2;
         }
         return;
-        //todo
     }
 
     int next_k1 = k2 - k1;
